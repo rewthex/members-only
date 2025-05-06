@@ -47,7 +47,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const { username, password, firstName, lastName } = req.body;
 
   const existingUser = await getUserByUsername(username);
-
+  
   if (existingUser) {
     return res.status(409).json({ message: "Username already taken" });
   }

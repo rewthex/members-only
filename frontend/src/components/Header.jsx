@@ -1,8 +1,15 @@
 import { Navbar, Nav, Container, NavDropdown, Badge } from "react-bootstrap";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
+import { useAuth } from "../services/AuthContext";
 
 const Header = () => {
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+  }
+
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
@@ -10,6 +17,7 @@ const Header = () => {
           <LinkContainer to="/">
             <Navbar.Brand>Members Only</Navbar.Brand>
           </LinkContainer>
+          <button onClick={handleLogout}>Log out</button>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">

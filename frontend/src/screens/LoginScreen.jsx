@@ -14,7 +14,7 @@ const LoginScreen = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (loggedIn) {
+    if (loggedIn()) {
       navigate("/");
     }
   }, [navigate, loggedIn]);

@@ -7,13 +7,13 @@ const HomeScreen = () => {
   const [error, setError] = useState("");
   const axios = useAxios();
   const auth = useAuth();
-  console.log(axios);
  
+  console.log(auth.loggedIn())
+
   useEffect(() => {
     async function getMessages() {
       try {
         const { data } = await axios.get("http://localhost:3000/");
-        console.log(data);
         setMessages(data);
       } catch (err) {
         setError(err);

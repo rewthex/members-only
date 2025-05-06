@@ -7,14 +7,7 @@ const validateUser = [
   body("username")
     .isLength({ min: 3, max: 12 })
     .withMessage(`Username ${lengthErr}`),
-  body("password"),
-  body("confirmPassword")
-    .custom((value, { req }) => {
-      if (value !== req.body.password) {
-        throw new Error("Passwords do not match.");
-      }
-      return true;
-    })
+  body("password")
     .isLength({ min: 3, max: 12 })
     .withMessage(`Password ${lengthErr}`),
   body("firstName")
