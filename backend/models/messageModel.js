@@ -9,4 +9,13 @@ const getAllMessages = async () => {
   return result.rows;
 };
 
-export { getAllMessages };
+const createMessage = async (userId, subject, message) => {
+  const result = await pool.query(
+    "INSERT INTO messages (user_id, subject, message) VALUES ($1, $2, $3)",
+    [userId, subject, message]
+  );
+
+  return result;
+};
+
+export { getAllMessages, createMessage };

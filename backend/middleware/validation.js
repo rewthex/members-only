@@ -7,15 +7,16 @@ const validateUser = [
   body("username")
     .isLength({ min: 3, max: 12 })
     .withMessage(`Username ${lengthErr}`),
-  body("password")
+  body("password"),
+  body("confirmPassword")
+    .custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error("Passwords do not match.");
+      }
+      return true;
+    })
     .isLength({ min: 3, max: 12 })
     .withMessage(`Password ${lengthErr}`),
-  body("confirmPassword").custom((value, { req }) => {
-    if (value !== req.body.password) {
-      throw new Error("Passwords do not match.");
-    }
-    return true;
-  }),
   body("firstName")
     .trim()
     .isAlpha()
@@ -30,4 +31,13 @@ const validateUser = [
     .withMessage(`Last name ${lengthErr}`),
 ];
 
-export { validateUser };
+const validateMessage = [
+  body("subject")
+    .isLength({ min: 3, max: 65 })
+    .withMessage("Subject must be between 3 and 65 characters."),
+  body("message")
+    .isLength({ min: 3, max: 300 })
+    .withMessage("Message must be between 3 and 300 characters."),
+];
+
+export { validateUser, validateMessage };

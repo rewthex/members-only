@@ -20,9 +20,10 @@ const options = {
 
 const strategy = new JwtStrategy(options, async (payload, done) => {
   try {
-    const user = await pool.query("SELECT * FROM users WHERE id = $1", [
+    const result = await pool.query("SELECT * FROM users WHERE id = $1", [
       payload.sub,
     ]);
+    const user = result.rows[0];
     if (user) {
       return done(null, user);
     } else {
