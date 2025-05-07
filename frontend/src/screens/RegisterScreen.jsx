@@ -42,7 +42,6 @@ const RegisterScreen = () => {
       login(token);
       navigate("/");
     } catch (err) {
-      console.log(err);
       if (err.response.data.message) {
         toast.error(err.response.data.message);
       } else {

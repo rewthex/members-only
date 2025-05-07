@@ -62,7 +62,7 @@ const ProfileScreen = () => {
   return (
     <>
       <FormContainer>
-        <h1>Update Profile</h1>
+        <h2>Update Profile</h2>
         <Form onSubmit={updateProfileSubmitHandler}>
           <Form.Group className="my-2" controlId="firstName">
             <Form.Label>First Name</Form.Label>
@@ -83,10 +83,11 @@ const ProfileScreen = () => {
               onChange={(e) => setLastName(e.target.value)}
             ></Form.Control>
           </Form.Group>
-
-          <Button type="submit" variant="primary" className="mt-3">
-            Update Profile
-          </Button>
+          <div className="d-grid gap-2">
+            <Button type="submit" variant="primary" className="mt-3">
+              Update Profile
+            </Button>
+          </div>
         </Form>
       </FormContainer>
 
@@ -103,9 +104,11 @@ const ProfileScreen = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Button type="submit" variant="primary" className="mt-3">
-              Enable Membership
-            </Button>
+            <div className="d-grid gap-2">
+              <Button type="submit" variant="primary" className="mt-3">
+                Enable Membership
+              </Button>
+            </div>
           </Form>
         </FormContainer>
       )}
