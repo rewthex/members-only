@@ -15,4 +15,32 @@ const createNewUser = async (username, password, firstName, lastName) => {
   );
 };
 
-export { getUserByUsername, createNewUser };
+const getUserProfileById = async (userId) => {
+  const result = await pool.query(
+    "SELECT first_name, last_name, member FROM users WHERE id = $1",
+    [userId]
+  );
+
+  return result.rows[0];
+};
+
+const updateUserProfileById = async (userId, firstName, lastName) => {
+  return await pool.query(
+    "UPDATE users SET first_name = $2, last_name = $3 WHERE id = $1",
+    [userId, firstName, lastName]
+  );
+};
+
+const enableMembershipById = async (userId) => {
+  return await pool.query("UPDATE users SET member = true WHERE id = $1", [
+    userId,
+  ]);
+};
+
+export {
+  getUserByUsername,
+  createNewUser,
+  getUserProfileById,
+  updateUserProfileById,
+  enableMembershipById
+};

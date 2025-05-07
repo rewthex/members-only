@@ -1,19 +1,15 @@
 import { useEffect, useState } from "react";
 import useAxios from "../services/useAxios";
-import { useAuth } from "../services/AuthContext.jsx";
 
 const HomeScreen = () => {
   const [messages, setMessages] = useState([]);
   const [error, setError] = useState("");
   const axios = useAxios();
-  const auth = useAuth();
- 
-  console.log(auth.loggedIn())
 
   useEffect(() => {
     async function getMessages() {
       try {
-        const { data } = await axios.get("http://localhost:3000/");
+        const { data } = await axios.get("/");
         setMessages(data);
       } catch (err) {
         setError(err);

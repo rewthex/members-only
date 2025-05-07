@@ -24,6 +24,21 @@ const validateUser = [
     .withMessage(`Last name ${lengthErr}`),
 ];
 
+const validateUserUpdate = [
+  body("firstName")
+    .trim()
+    .isAlpha()
+    .withMessage(`First name ${alphaErr}`)
+    .isLength({ min: 3, max: 12 })
+    .withMessage(`First name ${lengthErr}`),
+  body("lastName")
+    .trim()
+    .isAlpha()
+    .withMessage(`Last name ${alphaErr}`)
+    .isLength({ min: 3, max: 12 })
+    .withMessage(`Last name ${lengthErr}`),
+]
+
 const validateMessage = [
   body("subject")
     .isLength({ min: 3, max: 65 })
@@ -33,4 +48,4 @@ const validateMessage = [
     .withMessage("Message must be between 3 and 300 characters."),
 ];
 
-export { validateUser, validateMessage };
+export { validateUser, validateMessage, validateUserUpdate };

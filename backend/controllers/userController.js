@@ -1,5 +1,11 @@
 import asyncHandler from "express-async-handler";
-import { getUserByUsername, createNewUser } from "../models/userModel.js";
+import {
+  getUserByUsername,
+  createNewUser,
+  getUserProfileById,
+  updateUserProfileById,
+  enableMembershipById,
+} from "../models/userModel.js";
 import { issueJWT } from "../lib/utils.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
@@ -47,7 +53,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const { username, password, firstName, lastName } = req.body;
 
   const existingUser = await getUserByUsername(username);
-  
+
   if (existingUser) {
     return res.status(409).json({ message: "Username already taken" });
   }
@@ -77,12 +83,58 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc   Logout user
-// route   POST /logout
-// @access Public
+// @desc    Get user profile
+// route    GET /profile
+// @access  Private
 
-const logoutUser = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "Logged out successfully" });
+const getUserProfile = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const userInfo = await getUserProfileById(userId);
+    res.status(200).json(userInfo);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
-export { loginUser, registerUser, logoutUser };
+// @desc    Update user profile
+// route    POST /profile
+// @access  PRIVATE
+
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const { firstName, lastName } = req.body;
+
+  try {
+    await updateUserProfileById(userId, firstName, lastName);
+    res.status(200).json({ message: "Profile updated" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// @desc    Enable membership
+// route    POST /member
+// @access  Private
+
+const updateUserMembership = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const { secretCode } = req.body;
+
+  if (secretCode !== "password") {
+    res.status(401).json({ message: "Incorrect secret code" });
+    return;
+  }
+
+  try {
+    await enableMembershipById(userId);
+    res.status(200).json({ message: "Member status updated" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+export { loginUser, registerUser, getUserProfile, updateUserProfile, updateUserMembership };

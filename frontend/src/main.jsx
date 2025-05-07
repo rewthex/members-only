@@ -15,12 +15,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import App from "./App.jsx";
 import { AuthProvider } from "./services/AuthContext";
+import PostScreen from "./screens/PostScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index={true} path="/" element={<HomeScreen />} />
       <Route path="/login" element={<LoginScreen />} />
+      <Route path="/post" element={<PostScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
       <Route path="/profile" element={<ProfileScreen />} />
     </Route>

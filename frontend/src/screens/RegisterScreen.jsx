@@ -12,8 +12,9 @@ const RegisterScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const axios = useAxios();
+  
   const { login, loggedIn } = useAuth();
+  const axios = useAxios();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -82,6 +83,7 @@ const RegisterScreen = () => {
           <Form.Control
             type="password"
             value={confirmPassword}
+            placeholder="Confirm Password"
             onChange={(e) => setConfirmPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
