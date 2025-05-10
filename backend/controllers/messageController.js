@@ -13,10 +13,9 @@ const getMessages = asyncHandler(async (req, res) => {
     if (req.user) {
       return { ...rest, username, created_at };
     } else {
-      console.log(rest)
       return rest;
     }
-  });
+  })
 
   res.status(200).json(response);
 });

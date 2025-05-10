@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
-import useAxios from "../services/useAxios.js";
-import { useAuth } from "../services/AuthContext.jsx";
+import useAxios from "../hooks/useAxios.js";
+import { useAuth } from "../contexts/AuthContext.jsx";
 import { toast } from "react-toastify";
 
 const RegisterScreen = () => {
@@ -13,15 +13,15 @@ const RegisterScreen = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   
-  const { login, loggedIn } = useAuth();
+  const { authToken, login } = useAuth();
   const axios = useAxios();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (loggedIn()) {
+    if (authToken) {
       navigate("/");
     }
-  }, [navigate, loggedIn]);
+  }, []);
 
   const submitHandler = async (e) => {
     e.preventDefault();

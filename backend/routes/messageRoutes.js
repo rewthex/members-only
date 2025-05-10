@@ -7,6 +7,7 @@ import { validateMessage } from "../middleware/validation.js";
 const router = Router();
 
 router.get("/", optionalJwt, getMessages);
+
 router.post(
   "/post",
   passport.authenticate("jwt", { session: false }),

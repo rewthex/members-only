@@ -2,30 +2,34 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
-import useAxios from "../services/useAxios.js";
-import { useAuth } from "../services/AuthContext.jsx";
+import useAxios from "../hooks/useAxios.js";
+import { useAuth } from "../contexts/AuthContext.jsx";
 import { toast } from "react-toastify";
 
 const LoginScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const axios = useAxios();
-  const { login, loggedIn } = useAuth();
+  const { authToken, login } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (loggedIn()) {
+    if (authToken) {
       navigate("/");
     }
-  }, [navigate, loggedIn]);
+  }, [navigate, authToken]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
     try {
-      const { data } = await axios.post("/login", { username, password });
-      const { token } = data;
-      login(token);
+      const { data } = await axios.post(
+        "/login",
+        { username, password },
+        { withCredentials: true }
+      );
+      const { accessToken } = data;
+      login(accessToken);
       navigate("/");
     } catch (err) {
       toast.error(

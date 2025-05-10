@@ -1,34 +1,22 @@
 import jsonwebtoken from "jsonwebtoken";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import passport from "passport";
 
-// ESM __dirname replacement
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const issueRefreshToken = (userId) => {
+  const refreshToken = jsonwebtoken.sign(
+    { sub: userId },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: "7d" }
+  );
+  return refreshToken;
+};
 
-// Read private key
-const pathToKey = path.join(__dirname, "..", "id_rsa_priv.pem");
-const PRIV_KEY = fs.readFileSync(pathToKey, "utf8");
-
-const issueJWT = (user) => {
-  const expiresIn = "1d";
-
-  const payload = {
-    sub: user.id,
-    iat: Date.now(),
-  };
-
-  const signedToken = jsonwebtoken.sign(payload, PRIV_KEY, {
-    expiresIn: expiresIn,
-    algorithm: "RS256",
-  });
-
-  return {
-    token: "Bearer " + signedToken,
-    expires: expiresIn,
-  };
+const issueAccessToken = (userId) => {
+  const accessToken = jsonwebtoken.sign(
+    { sub: userId },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: "15m" }
+  );
+  return accessToken;
 };
 
 const optionalJwt = (req, res, next) => {
@@ -37,8 +25,12 @@ const optionalJwt = (req, res, next) => {
       req.user = user;
     }
 
+    if (!user && req.cookies.refreshToken) {
+      return res.status(401).json({ message: "Access token invalid, attempt refresh" });
+    }
+
     next();
   })(req, res, next);
 };
 
-export { optionalJwt, issueJWT };
+export { issueRefreshToken, issueAccessToken, optionalJwt };

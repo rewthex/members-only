@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { ListGroup, Badge } from "react-bootstrap";
 import moment from "moment";
-import useAxios from "../services/useAxios";
+import useAxios from "../hooks/useAxios";
+import { toast } from "react-toastify";
 
 const HomeScreen = () => {
   const [messages, setMessages] = useState([]);
-  const [error, setError] = useState("");
   const axios = useAxios();
 
   useEffect(() => {
@@ -14,12 +14,14 @@ const HomeScreen = () => {
         const { data } = await axios.get("/");
         setMessages(data);
       } catch (err) {
-        setError(err);
+        toast.error(
+                err?.response?.data?.message || err?.message || "Something went wrong"
+              );
       }
     }
 
     getMessages();
-  });
+  }, []);
 
   return (
     <ListGroup as="ul" className="mt-5">
@@ -28,6 +30,7 @@ const HomeScreen = () => {
           return (
             <ListGroup.Item
               as="li"
+              key={message.id}
               className="d-flex justify-content-between align-items-start p-4"
             >
               <div className="ms-2 me-auto">

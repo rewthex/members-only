@@ -6,8 +6,9 @@ import {
   updateUserProfileById,
   enableMembershipById,
 } from "../models/userModel.js";
-import { issueJWT } from "../lib/utils.js";
+import jsonwebtoken from "jsonwebtoken";
 import { validationResult } from "express-validator";
+import { issueAccessToken, issueRefreshToken } from "../lib/utils.js";
 import bcrypt from "bcryptjs";
 
 // @desc    Auth user/set token
@@ -29,14 +30,62 @@ const loginUser = asyncHandler(async (req, res) => {
     return res.status(401).json({ message: "Invalid username or password" });
   }
 
-  const jwt = issueJWT(user);
+  const refreshToken = issueRefreshToken(user.id);
+  const accessToken = issueAccessToken(user.id);
 
-  res.status(201).json({
-    message: "User logged in successfully",
-    user,
-    token: jwt.token,
-    expiresIn: jwt.expires,
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    sameSite: "Lax",
+    secure: false,
+    path: "/",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
+
+  res.status(200).json({
+    accessToken,
+  });
+});
+
+// @desc    Logout user
+// route    /logout
+// @access  Private
+
+const logoutUser = asyncHandler(async (req, res) => {
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    sameSite: "Lax",
+    secure: false,
+    path: "/",
+  });
+
+  res.status(200).json({ message: "Logged out successfully" });
+});
+
+// @desc    Refresh access token
+// route    POST /refresh
+// @access  Private
+
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(401).json({ message: "Missing refresh token" });
+  }
+
+  try {
+    const payload = jsonwebtoken.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+
+    const accessToken = issueAccessToken(payload.sub);
+    res.status(200).json({ accessToken });
+  } catch (err) {
+    return res
+      .status(401)
+      .json({ message: "Invalid or expired refresh token" });
+  }
 });
 
 // @desc    Register a new user
@@ -69,13 +118,17 @@ const registerUser = asyncHandler(async (req, res) => {
 
     const user = result.rows[0];
 
-    const jwt = issueJWT(user);
+    const refreshToken = issueRefreshToken(user.id);
+    const accessToken = issueAccessToken(user.id);
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     res.status(201).json({
-      message: "User registered successfully",
-      user,
-      token: jwt.token,
-      expiresIn: jwt.expires,
+      accessToken,
     });
   } catch (err) {
     console.error(err);
@@ -137,4 +190,13 @@ const updateUserMembership = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-export { loginUser, registerUser, getUserProfile, updateUserProfile, updateUserMembership };
+
+export {
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  registerUser,
+  getUserProfile,
+  updateUserProfile,
+  updateUserMembership,
+};

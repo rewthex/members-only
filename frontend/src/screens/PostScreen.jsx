@@ -1,13 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import FormContainer from "../components/FormContainer";
+import useAxios from "../hooks/useAxios.js";
+import { useAuth } from "../contexts/AuthContext.jsx";
+import { toast } from "react-toastify";
 
 const PostScreen = () => {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
 
+  const navigate = useNavigate();
+  const axios = useAxios();
+  const { authToken } = useAuth();
+
+  useEffect(() => {
+    if (!authToken) {
+      navigate("/login");
+    }
+  }, []);
+
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    try {
+      await axios.post("/post", { subject, message });
+      navigate("/");
+    } catch (err) {
+      if (err.response.data.message) {
+        toast.error(err.response.data.message);
+      } else {
+        const errors = err.response.data.errors;
+        errors.forEach((error) => {
+          toast.error(error.msg);
+        });
+      }
+    }
   };
 
   return (

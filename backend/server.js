@@ -1,18 +1,22 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import "dotenv/config";
-
 import userRouter from "./routes/userRoutes.js";
 import messageRouter from "./routes/messageRoutes.js"
-
-const app = express();
-
 import passport from "passport";
 import configurePassport from "./config/passport.js";
 
+
+const app = express();
+
 configurePassport(passport);
 
-app.use(cors());
+app.use(cookieParser())
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

@@ -1,21 +1,11 @@
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-
 import pool from "./database.js";
-
-import fs from "fs";
-import { fileURLToPath } from "url";
-import path from "path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const pathToKey = path.join(__dirname, "..", "id_rsa_pub.pem");
-const PUB_KEY = fs.readFileSync(pathToKey, "utf8");
+import "dotenv/config";
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: PUB_KEY,
-  algorithms: ["RS256"],
+  secretOrKey: process.env.ACCESS_TOKEN_SECRET,
+  algorithms: ["HS256"],
 };
 
 const strategy = new JwtStrategy(options, async (payload, done) => {

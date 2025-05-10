@@ -14,7 +14,7 @@ import ProfileScreen from "./screens/ProfileScreen.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import App from "./App.jsx";
-import { AuthProvider } from "./services/AuthContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import PostScreen from "./screens/PostScreen.jsx";
 
 const router = createBrowserRouter(

@@ -1,6 +1,8 @@
 import { Router } from "express";
 import {
   loginUser,
+  logoutUser,
+  refreshAccessToken,
   registerUser,
   getUserProfile,
   updateUserProfile,
@@ -12,6 +14,8 @@ import passport from "passport";
 const router = Router();
 
 router.post("/login", loginUser);
+router.post("/logout", logoutUser);
+router.post("/refresh", refreshAccessToken);
 router.post("/register", validateUser, registerUser);
 router.get(
   "/profile",

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
-import useAxios from "../services/useAxios.js";
+import useAxios from "../hooks/useAxios.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -10,7 +10,6 @@ const ProfileScreen = () => {
   const [lastName, setLastName] = useState("");
   const [hasMembership, setHasMembership] = useState("");
   const [secretCode, setSecretCode] = useState("");
-  const [error, setError] = useState("");
 
   const navigate = useNavigate();
   const axios = useAxios();
@@ -24,19 +23,21 @@ const ProfileScreen = () => {
         setLastName(last_name);
         setHasMembership(member);
       } catch (err) {
-        setError(err);
+        toast.error(
+          err?.response?.data?.message || err?.message || "Something went wrong"
+        );
       }
     }
 
     getProfileInfo();
-  });
+  }, []);
 
   const updateProfileSubmitHandler = async (e) => {
     e.preventDefault();
 
     try {
       await axios.post("/profile", { firstName, lastName });
-      navigate("/profile");
+      toast.success("Profile updated");
     } catch (err) {
       if (err.response.data.message) {
         toast.error(err.response.data.message);

@@ -1,18 +1,25 @@
-import { Navbar, Nav, Container, NavDropdown, Badge } from "react-bootstrap";
+import { Navbar, Nav, Container } from "react-bootstrap";
 import { FaSignInAlt, FaSignOutAlt, FaAddressCard } from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
-
 import { LinkContainer } from "react-router-bootstrap";
-import { useAuth } from "../services/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import useAxios from "../hooks/useAxios";
+import { toast } from "react-toastify";
 
 const Header = () => {
-  const { logout, loggedIn } = useAuth();
-  const navigate = useNavigate();
+  const { authToken, logout } = useAuth();
+  const axios = useAxios();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     logout();
-    navigate("/");
+    try {
+      await axios.post("/logout");
+      window.location.reload();
+    } catch (err) {
+      toast.error(
+        err?.response?.data?.message || err?.message || "Something went wrong"
+      );
+    }
   };
 
   return (
@@ -25,7 +32,7 @@ const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              {loggedIn() ? (
+              {authToken ? (
                 <>
                   <LinkContainer to="/post">
                     <Nav.Link>
@@ -37,11 +44,10 @@ const Header = () => {
                       <FaAddressCard /> Profile
                     </Nav.Link>
                   </LinkContainer>
-                  
-                    <Nav.Link onClick={handleLogout}>
-                      <FaSignOutAlt /> Sign Out
-                    </Nav.Link>
-                  
+
+                  <Nav.Link onClick={handleLogout}>
+                    <FaSignOutAlt /> Sign Out
+                  </Nav.Link>
                 </>
               ) : (
                 <>
