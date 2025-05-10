@@ -35,8 +35,8 @@ const loginUser = asyncHandler(async (req, res) => {
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    sameSite: "Lax",
-    secure: false,
+    sameSite: "None",
+    secure: true,
     path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
@@ -51,11 +51,10 @@ const loginUser = asyncHandler(async (req, res) => {
 // @access  Private
 
 const logoutUser = asyncHandler(async (req, res) => {
-
   res.clearCookie("refreshToken", {
     httpOnly: true,
-    sameSite: "Lax",
-    secure: false,
+    sameSite: "None",
+    secure: true,
     path: "/",
   });
 
@@ -123,8 +122,10 @@ const registerUser = asyncHandler(async (req, res) => {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      sameSite: "Strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "None",
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      path: "/",
     });
 
     res.status(201).json({
