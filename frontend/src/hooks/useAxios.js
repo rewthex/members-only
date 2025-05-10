@@ -9,7 +9,7 @@ const useAxios = () => {
 
   const axiosInstance = useMemo(() => {
     const instance = axios.create({
-      baseURL: "http://localhost:3000",
+      baseURL: import.meta.env.VITE_API_URL,
       withCredentials: true,
     });
 
@@ -28,7 +28,7 @@ const useAxios = () => {
           originalRequest._retry = true;
           try {
             const res = await axios.post(
-              "http://localhost:3000/refresh",
+              import.meta.env.VITE_API_URL + "/refresh",
               {},
               { withCredentials: true }
             );

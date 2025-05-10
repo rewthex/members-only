@@ -11,11 +11,13 @@ const usersTable = `CREATE TABLE users (
 );`;
 
 const usersDummy = `
-INSERT INTO users (username, password ,first_name, last_name, member, admin)
+INSERT INTO users (username, password, first_name, last_name, member, admin)
 VALUES 
-  ('jdoe', 'top_secret_hash' ,'John', 'Doe', true, false),
-  ('asmith',  'top_secret_hash' ,'Alice', 'Smith', false, false),
-  ('adminuser',  'top_secret_hash' ,'Admin', 'User', true, true);
+  ('zen_kato', 'top_secret_hash', 'Zen', 'Kato', true, false),
+  ('livnguyen87', 'top_secret_hash', 'Liv', 'Nguyen', false, false),
+  ('kairos.dev', 'top_secret_hash', 'Kai', 'Rosenthal', true, false),
+  ('noor_qa', 'top_secret_hash', 'Noor', 'Qamar', false, false),
+  ('elena.codes', 'top_secret_hash', 'Elena', 'Trujillo', true, true);
 `;
 
 const messagesTable = `
@@ -29,12 +31,13 @@ CREATE TABLE messages (
 `;
 
 const messagesDummy = `
-INSERT INTO messages (user_id, subject, message)
+INSERT INTO messages (user_id, subject, message, created_at)
 VALUES
-  (1, 'Welcome', 'Welcome to the message board, John!'),
-  (2, 'Hello there', 'Glad to be part of this community.'),
-  (3, 'Admin Notice', 'Please read the rules before posting.');
-
+  (1, 'Kicking Things Off', 'Hey everyone, Zen here — stoked to join the board.', '2025-04-30 05:14:56'),
+  (2, 'Quick Question', 'Does anyone know if we have a weekly Q&A thread?', '2025-04-18 12:57:12'),
+  (3, 'Build in Progress', 'Just started a new side project. Will share updates soon!', '2025-04-22 17:18:54'),
+  (4, 'Happy to Join', 'Excited to learn and contribute. This place seems great!', '2025-04-10 18:03:32'),
+  (5, 'Community Guidelines Update', 'Admins have updated the posting rules. Please review them when you can.', '2025-04-29 20:57:08');
 `;
 
 async function main() {
