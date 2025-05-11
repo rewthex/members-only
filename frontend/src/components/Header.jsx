@@ -24,7 +24,7 @@ const Header = () => {
 
   return (
     <header>
-      <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
+      <Navbar  bg="dark" data-bs-theme="dark" expand="lg" collapseOnSelect>
         <Container>
           <LinkContainer to="/">
             <Navbar.Brand>Members Only</Navbar.Brand>
@@ -34,31 +34,31 @@ const Header = () => {
             <Nav className="ms-auto">
               {authToken ? (
                 <>
-                  <LinkContainer to="/post">
+                  <LinkContainer to="/post" className="me-2">
                     <Nav.Link>
-                      <FaMessage /> New Post
+                      <FaMessage className="me-1" /> New Post
                     </Nav.Link>
                   </LinkContainer>
-                  <LinkContainer to="/profile">
+                  <LinkContainer to="/profile" className="me-2">
                     <Nav.Link>
-                      <FaAddressCard /> Profile
+                      <FaAddressCard className="me-1" /> Profile
                     </Nav.Link>
                   </LinkContainer>
 
-                  <Nav.Link onClick={handleLogout}>
-                    <FaSignOutAlt /> Sign Out
+                  <Nav.Link onClick={handleLogout} className="me-2">
+                    <FaSignOutAlt className="me-1" /> Sign Out
                   </Nav.Link>
                 </>
               ) : (
                 <>
-                  <LinkContainer to="/login">
+                  <LinkContainer to="/login" className="me-2">
                     <Nav.Link>
-                      <FaSignInAlt /> Sign In
+                      <FaSignInAlt className="me-1" /> Sign In
                     </Nav.Link>
                   </LinkContainer>
-                  <LinkContainer to="/register">
+                  <LinkContainer to="/register" className="me-2">
                     <Nav.Link>
-                      <FaSignOutAlt /> Sign Up
+                      <FaSignOutAlt className="me-1" /> Sign Up
                     </Nav.Link>
                   </LinkContainer>
                 </>
