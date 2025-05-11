@@ -11,23 +11,36 @@ const app = express();
 
 configurePassport(passport);
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://feisty-kindness-production-98a8.up.railway.app"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
+
+app.options("*", cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
+
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://members-only-production-2bc4.up.railway.app/",
-    ],
-    credentials: true,
-  })
-);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-app.use((req, res, next) => {
-  console.log("Origin: ", req.headers.origin);
-  next();
-});
 
 app.use(userRouter);
 app.use(messageRouter);
