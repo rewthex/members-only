@@ -24,6 +24,11 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use((req, res, next) => {
+  console.log("Origin: ", req.headers.origin);
+  next();
+});
+
 app.use(userRouter);
 app.use(messageRouter);
 
